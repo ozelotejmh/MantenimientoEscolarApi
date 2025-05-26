@@ -11,5 +11,6 @@ namespace MantenimientoEscolarApi.Data
         }
 
         public DbSet<SolicitudesMantenimiento> SolicitudesMantenimiento { get; set; }
+        public DbSet<Usuarios> Usuarios { get; set; }
     }
 }

@@ -22,14 +22,12 @@ namespace MantenimientoEscolarApi.Service
                 .ToListAsync();
         }
 
-        public async Task<SolicitudesMantenimiento> ObtenerPorIdAsync(int id)
+        public async Task<IEnumerable<SolicitudesMantenimiento>> ObtenerPorIdAsync(int id)
         {
-            var solicitudes = await _context.SolicitudesMantenimiento
+            return await _context.SolicitudesMantenimiento
                 .FromSqlRaw("EXEC ConsultarSolicitudesPorUsuario @UsuarioId",
                     new SqlParameter("@UsuarioId", id))
                 .ToListAsync();
-
-            return solicitudes.FirstOrDefault();
         }
 
         public async Task CrearAsync(SolicitudesMantenimiento solicitud)

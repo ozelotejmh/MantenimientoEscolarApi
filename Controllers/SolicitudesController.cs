@@ -1,9 +1,11 @@
 ﻿using MantenimientoEscolarApi.Models;
 using MantenimientoEscolarApi.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MantenimientoEscolarApi.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("api/solicitudes")]
     public class SolicitudesController : ControllerBase
@@ -32,11 +34,32 @@ namespace MantenimientoEscolarApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear([FromBody] SolicitudesMantenimiento solicitud)
+        public async Task<IActionResult> Crear([FromBody] CrearSolicitudDTO solicitud)
         {
-            await _service.CrearAsync(solicitud);
-            return CreatedAtAction(nameof(ObtenerPorId), new { id = solicitud.IdSolicitud }, solicitud);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var entidad = new SolicitudesMantenimiento
+            {
+                UsuarioId = solicitud.usuarioId,
+                CategoriaId = solicitud.categoriaId,
+                Descripcion = solicitud.descripcion,
+                Ubicacion = solicitud.ubicacion,
+                Fecha = solicitud.fecha,
+                Estado = solicitud.estado
+            };
+
+            try
+            {
+                await _service.CrearAsync(entidad);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] SolicitudesMantenimiento solicitud)

@@ -60,12 +60,13 @@ namespace MantenimientoEscolarApi.Service
             try
             {
                 await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC ActualizarSolicitud @IdSolicitud, @Descripcion, @Ubicacion, @Estado",
+                    "EXEC ActualizarSolicitud @IdSolicitud, @NuevoEstado, @NuevaUbicacion, @NuevaDescripcion",
                     new SqlParameter("@IdSolicitud", solicitud.IdSolicitud),
-                    new SqlParameter("@Descripcion", solicitud.Descripcion),
-                    new SqlParameter("@Ubicacion", solicitud.Ubicacion),
-                    new SqlParameter("@Estado", solicitud.Estado)
+                    new SqlParameter("@NuevoEstado", solicitud.Estado),
+                    new SqlParameter("@NuevaUbicacion", solicitud.Ubicacion),
+                    new SqlParameter("@NuevaDescripcion", solicitud.Descripcion)
                 );
+
             }
             catch (SqlException ex)
             {

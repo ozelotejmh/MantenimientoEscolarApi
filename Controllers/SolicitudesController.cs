@@ -62,14 +62,30 @@ namespace MantenimientoEscolarApi.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Actualizar(int id, [FromBody] SolicitudesMantenimiento solicitud)
+        public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarSolicitudDTO dto)
         {
-            if (id != solicitud.IdSolicitud)
-                return BadRequest();
+            if (id != dto.idSolicitud)
+                return BadRequest("El ID del cuerpo no coincide con el ID de la URL.");
 
-            await _service.ActualizarAsync(solicitud);
-            return NoContent();
+            var entidad = new SolicitudesMantenimiento
+            {
+                IdSolicitud = dto.idSolicitud,
+                Descripcion = dto.descripcion,
+                Ubicacion = dto.ubicacion,
+                Estado = dto.estado
+            };
+
+            try
+            {
+                await _service.ActualizarAsync(entidad);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Eliminar(int id)
